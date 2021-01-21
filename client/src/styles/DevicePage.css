@@ -1,0 +1,21 @@
+.Title {
+  text-align: center;
+  margin-left: 100px;
+}
+.content {
+  background-color: #94de7a;
+  width: 100vw;
+  height: 100vh;
+}
+.cards {
+  text-align: left;
+}
+.myContainer {
+  float: left;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}

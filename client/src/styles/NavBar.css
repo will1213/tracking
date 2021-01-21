@@ -1,0 +1,19 @@
+* {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.internal-container {
+  float: left;
+  background-color: #28703c;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.logo {
+  width: 15vw;
+}

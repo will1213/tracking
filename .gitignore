@@ -1,0 +1,13 @@
+
+client/.eslintcache
+client/.gitattributes
+client/.env
+.firebase/hosting.cHVibGlj.cache
+.firebaserc
+.github/workflows/firebase-hosting-merge.yml
+.github/workflows/firebase-hosting-pull-request.yml
+firebase.json
+firestore.indexes.json
+firestore.rules
+public/404.html
+public/index.html
