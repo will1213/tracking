@@ -7,6 +7,11 @@ import firebase, { db, auth} from "../components/db";
 class LoginPage extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      authenticated : false,
+      role : false,
+
+    }
     this.signInUser = this.signInUser.bind(this);
   }
   
@@ -23,6 +28,9 @@ class LoginPage extends Component {
     // The signed-in user info.
     var user = result.user;
     console.log(user);
+    this.setState({
+      authenticated: true,
+    })
     // ...
   }).catch((error) => {
     console.log(error);
@@ -33,18 +41,22 @@ class LoginPage extends Component {
   render() {
     return (
       <React.Fragment>
+        {this.state.authenticated ? (
+        <Redirect to={"/device"} />):(
           <div className="container">
-            <div className="internal-container">
-             <img src={logo} className="logo"></img>
+          <div className="internal-container">
+           <img src={logo} className="logo"></img>
 
-              <Button
-                className="login-button"
-                onClick={()=>{this.signInUser()}}
-              >
-                Sign in With Google
-              </Button>
-            </div>
+            <Button
+              className="login-button"
+              onClick={()=>{this.signInUser()}}
+            >
+              Sign in With Google
+            </Button>
           </div>
+        </div>
+        )}
+
       </React.Fragment>
     );
   }

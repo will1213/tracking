@@ -3,6 +3,8 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import "../styles/NavBar.css";
+import firebase from "./db";
+import { Redirect } from "react-router-dom";
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
@@ -40,11 +42,15 @@ class NavBar extends React.Component {
                  Remove Device
                 </Button>
             </Link>
-            <Link>
-                <Button variant="outline-dark">
+                <Button variant="outline-dark" onClick = {()=>(
+                    firebase.auth().signOut().then(() => {
+                        console.log("logged out");
+                        <Link to = "/"></Link>
+                    }).catch((error) => {
+                        console.log("failed to log out")
+                    }))}>
                  Sign out
                 </Button>
-            </Link>
             </div> 
         </div>
     );
