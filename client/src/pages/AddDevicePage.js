@@ -12,6 +12,8 @@ class AddDevicePage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            authenticated : false,
+            role : false,
             documents : [],
             device : [],
             deviceID: [],
@@ -21,30 +23,6 @@ class AddDevicePage extends React.Component {
           }
     }
 
-    gettingDeviceInfo(){
-        fetch(
-          'http://localhost:8888/device',
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-          .then((response) => {
-            if (response.status === 200) return response.json();
-            throw new Error("failed to get the device");
-          })
-          .then((responseJson) => {
-            this.setState({
-     
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
     render(){
 
         var row = [];

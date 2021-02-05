@@ -8,7 +8,8 @@ import "../styles/DevicePage.css";
 import Table from 'react-bootstrap/Table'
 
 
-import { db} from "../components/db";
+import { auth, db} from "../components/db";
+import { AuthConsumer } from "../context/AuthContext"
 
 function deleteButton(props) {
   return (
@@ -28,6 +29,8 @@ export default class DevicePage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            authenticated : false,
+            role : false,
             documents : [],
             devices : [],
             dates : [],
@@ -39,7 +42,18 @@ export default class DevicePage extends React.Component {
     }
 
     componentDidMount(){
+      //console.log(this.props.location.state.authenticated);
+      /*
+      if(this.props.location.state !== undefined){
+        console.log("undefineeeeee");
+        this.setState({
+          authenticated: this.props.location.state.authenticated,
+        })
+
+      }
+    */
       console.log("device page")
+      console.log(this.state.authenticated) 
       this.gettingDeviceInfo();
 
     }
@@ -107,32 +121,43 @@ export default class DevicePage extends React.Component {
         
 
         return(
-            <React.Fragment>
-            
-        <div className='content'>
-            <NavBar/>
-            <div className = 'info'>      
-            <h1 className = "Title">
-                {"Device"}
-            </h1>
-            <Table striped bordered hover variant="dark">
-  <thead>
-    <tr>
-      <th>Device Name</th>
-      <th>Date</th>
-      <th>Owner</th>
-      <th>Software required</th>
-      <th>Last location</th>
-    </tr>
-  </thead>
-  <tbody>
-        {row}
-  </tbody>
-</Table>
 
-            </div>
-          </div>
-          </React.Fragment>
+          <AuthConsumer>
+            {
+              (authenticated, user) =>{
+                console.log(authenticated,user);
+                  return(                  
+                  <React.Fragment>
+                    <div className='content'>
+                      <NavBar/>
+                      <div className = 'info'>      
+                        <h1 className = "Title">
+                          {"Device"}
+                        </h1>
+                        <Table striped bordered hover variant="dark">
+                          <thead>
+                            <tr>
+                              <th>Device Name</th>
+                              <th>Date</th>
+                              <th>Owner</th>
+                              <th>Software required</th>
+                              <th>Last location</th>
+                            </tr>
+                          </thead>
+                        <tbody>
+                          {row}
+                        </tbody>
+                        </Table>
+                      </div>
+                    </div>
+                  </React.Fragment>)
+
+              }
+            }
+          </AuthConsumer>
+
+
+          
         )
     }
 }
