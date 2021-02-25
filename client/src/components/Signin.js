@@ -1,5 +1,4 @@
 import  React from "react";
-import { render } from "react-dom";
 import  firebase from "firebase/app";
 import 'firebase/auth';
 import {

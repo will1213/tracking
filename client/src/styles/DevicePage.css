@@ -19,3 +19,6 @@
   align-items: stretch;
   justify-content: center;
 }
+.deviceList {
+  width: 50vw;
+}

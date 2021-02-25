@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import "../styles/NavBar.css";
-import firebase from "./db";
 import { Redirect } from "react-router-dom";
 import { AuthConsumer } from "../context/AuthContext"
 
@@ -24,9 +23,7 @@ function Test (){
   )
 }
 class NavBar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
 
   render() {
     return (
@@ -34,39 +31,39 @@ class NavBar extends React.Component {
             
             <div className="internal-container">
             <div>Engineering for Kids</div> 
-            <img src={logo} className="logo"></img>
+            <img src={logo} alt = "" className="logo"></img>
             <Link to="/device">
-                <Button variant="outline-dark">
+                <Button variant="danger">
                  My Devices
                 </Button>
             </Link>
             <Link to="/staff">
-                <Button variant="outline-dark">
+                <Button variant="danger">
                  EFK Calgary
                 </Button>
             </Link>
             <Link to="/staff">
-                <Button variant="outline-dark">
+                <Button variant="danger">
                  EFK Edmonton
                 </Button>
             </Link>
-            <Link to="/device">
-                <Button variant="outline-dark">
+            <Link to="/add">
+                <Button variant="danger">
                  Add New Device
                 </Button>
             </Link>
             <Link to="/device">
-                <Button variant="outline-dark">
+                <Button variant="danger">
                  Remove Device
                 </Button>
             </Link>
             <Link to="/calendar">
-                <Button variant="outline-dark">
+                <Button variant="danger">
                  Calendar
                 </Button>
             </Link>
             <Test/>
-            <Button variant="outline-dark" onClick = {()=>(console.log("test"))}>
+            <Button variant="danger" onClick = {()=>(console.log("test"))}>
               Sign out
              </Button>
 

@@ -1,30 +1,23 @@
 import NavBar from "../components/NavBar";
 import React from "react";
 import { Button } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
-import { Card } from "react-bootstrap"
-import {Modal} from 'react-bootstrap'
 import "../styles/DevicePage.css";
 import Table from 'react-bootstrap/Table'
 
 
-import { auth, db} from "../components/db";
+import {db} from "../components/db";
 import { AuthConsumer } from "../context/AuthContext"
 
-function deleteButton(props) {
-  return (
-    <React.Fragment>
-      <Button onClick={()=>{
-        console.log("trying to delete");
-        console.log(props.documentID);
-        db.collection("Device").doc(props.documentID).delete().then(()=>{})
-          .catch(error =>{
-            console.log(error);
-           })}}>
-        Delete</Button>
-    </React.Fragment>
-  );
+function MyDeleteButton(props) {
+    return <Button {...props} onClick={()=>{
+      db.collection("Device").doc(props.documentid).delete().then(()=>{
+        props.onClick();
+      }).catch(error =>{
+        console.log(error);
+      })
+    }}> Delete</Button>;
 }
+
 export default class DevicePage extends React.Component {
     constructor(props){
         super(props);
@@ -36,32 +29,24 @@ export default class DevicePage extends React.Component {
             dates : [],
             owners : [],
             locations : [],
+            softwares : [],
+            times: [],
           }
         this.gettingDeviceInfo = this.gettingDeviceInfo.bind(this);
         this.deleteDeviceInfo = this.deleteDeviceInfo.bind(this);
     }
 
     componentDidMount(){
-      //console.log(this.props.location.state.authenticated);
-      /*
-      if(this.props.location.state !== undefined){
-        console.log("undefineeeeee");
-        this.setState({
-          authenticated: this.props.location.state.authenticated,
-        })
 
-      }
-    */
       console.log("device page")
-      console.log(this.state.authenticated) 
       this.gettingDeviceInfo();
 
     }
     
-    deleteDeviceInfo(documentID){
+    deleteDeviceInfo(documentid){
       console.log("trying to delete");
-      console.log(documentID);
-      db.collection("Device").doc(documentID).delete().then(()=>{
+      console.log(documentid);
+      db.collection("Device").doc(documentid).delete().then(()=>{
         this.gettingDeviceInfo();
       }).catch(error =>{
         console.log(error);
@@ -74,47 +59,78 @@ export default class DevicePage extends React.Component {
       var dbdates = [];
       var dbowners = [];
       var dblocations = [];
+      var dbsoftwares = [];
+      var dbTime = [];
 
-      const devices = db.collection("Device").orderBy("Date").get().then(snapshot=>{
+      const devices = db.collection("Device").orderBy("Date").get().then( snapshot => {
 
-    snapshot.forEach(doc => { 
-        dbdocuments.push(doc.id);
+        
+      snapshot.forEach(doc => { 
+        
+        db.collection("Device").doc(doc.id).collection("Software").get().then( snapshot2 => {
+          var tempSoftwares = [];
+          snapshot2.forEach (doc2 => {
+            tempSoftwares.push(doc2.data().software)
+          })
+
+          dbsoftwares.push(new Array(tempSoftwares))
+          tempSoftwares = [];
+          dbdocuments.push(doc.id);
+          dbdevices.push(doc.data().DeviceName);
+          dbdates.push(doc.data().Date.toDate());
+          dbowners.push(doc.data().Owner);
+          dblocations.push(doc.data().Location);
+          dbTime.push(doc.data().TimeUsed)
+
+        }).then(
+          ()=>{
+            /*
+            console.log(dbsoftwares[3][0])
+            console.log(dbsoftwares[3])*/
+          this.setState({
+            documents : dbdocuments,
+            devices : dbdevices,
+            dates : dbdates,
+            owners : dbowners,
+            locations : dblocations,
+            softwares : dbsoftwares,
+            times : dbTime,
+          })
+        }
+        ).catch( (error)=>{
+          console.log(error);
+        })
+
+        /*dbdocuments.push(doc.id);
         dbdevices.push(doc.data().DeviceName);
         dbdates.push(doc.data().Date.toDate());
         dbowners.push(doc.data().Owner);
-        dblocations.push(doc.data().location);
+        dblocations.push(doc.data().Location);
+        dbTime.push(doc.data().TimeUsed)*/
     })
-    
-}).then( ()=>{
-  this.setState({
-    documents : dbdocuments,
-    devices : dbdevices,
-    dates : dbdates,
-    owners : dbowners,
-    locations : dblocations,
-  })
-}
-).catch( (error)=>{
-  console.log(error);
 })
     }
 
     
     render(){
+
+      //console.log(this.state.softwares)
+      //this.state.softwares.forEach(element => element.map( test => console.log(test)))
+
       var row = [];
       var i;
-      console.log(this.state.documents.length)
       for (i = 0 ; i < this.state.documents.length ; i++){
         const date = new Date(this.state.dates[i]);
-        console.log(this.state.documents[i])
+        //console.log(this.state.softwares[i])
         row.push(
-        <tr>
+        <tr key = {i}>
           <td className = "DeviceName">{this.state.devices[i]}</td>
           <td className = "Date">{date.getFullYear()}/{date.getMonth()+1}/{date.getDate()}</td>
           <td className = "Owner">{this.state.owners[i]}</td>
-          <td className = "Software">Figma</td>
-          <td className = "Location">Calgary</td>
-          <Button  onClick={()=>{}}>Delete</Button>
+          <td className = "Software">{this.state.softwares[i].map(element =>  ("" + element))}</td>
+          <td className = "Time">{this.state.times[i]}</td>
+          <td className = "Location">{this.state.locations[i]}</td>
+          <td ><MyDeleteButton documentid = {this.state.documents[i]} onClick={this.gettingDeviceInfo}>Delete</MyDeleteButton></td>
         </tr>
         )
       }
@@ -130,25 +146,26 @@ export default class DevicePage extends React.Component {
                   <React.Fragment>
                     <div className='content'>
                       <NavBar/>
-                      <div className = 'info'>      
-                        <h1 className = "Title">
-                          {"Device"}
-                        </h1>
-                        <Table striped bordered hover variant="dark">
-                          <thead>
-                            <tr>
-                              <th>Device Name</th>
-                              <th>Date</th>
-                              <th>Owner</th>
-                              <th>Software required</th>
-                              <th>Last location</th>
-                            </tr>
-                          </thead>
-                        <tbody>
-                          {row}
-                        </tbody>
-                        </Table>
-                      </div>
+                        <div className = 'info'>      
+                          <h1 className = "Title">
+                            {"Device"}
+                          </h1>
+                          <Table striped bordered hover variant="dark">
+                            <thead>
+                              <tr key = "Title">
+                                <th key = "DeviceTitle">Device Name</th>
+                                <th key = "DateTitle">Date</th>
+                                <th key = "OwnerTitle">Owner</th>
+                                <th key = "SoftwareTitle">Software required</th>
+                                <th key = "TimeTitle">Time being used (Hr)</th>
+                                <th key = "LocationTitle">Last location</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {row}
+                            </tbody>
+                          </Table>
+                        </div>
                     </div>
                   </React.Fragment>)
 

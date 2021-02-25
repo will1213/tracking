@@ -2,3 +2,16 @@
   padding-left: 5vw;
   width: 30vw;
 }
+.button-group {
+  margin: 2vw;
+}
+.staffCard {
+  background: #94de7a !important;
+  margin: 10px;
+  width: 30vw;
+  align-items: stretch;
+  justify-content: center;
+}
+.staffCardHeader {
+  background: #28703c !important;
+}

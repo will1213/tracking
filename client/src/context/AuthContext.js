@@ -1,5 +1,5 @@
 import React from 'react'
-import firebase, { db, auth} from "../components/db";
+import firebase, { auth} from "../components/db";
 const AuthContext = React.createContext()
 
 class AuthProvider extends React.Component {
@@ -28,6 +28,7 @@ class AuthProvider extends React.Component {
       // The signed-in user info.
       var user = result.user;
       console.log(user);
+      //console.log(token);
       this.setState({
         authenticated: true,
         user: user,

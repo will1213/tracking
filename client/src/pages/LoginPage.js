@@ -25,7 +25,7 @@ function Loginfun (){
                 {authenticated ? (
                   <Redirect to={"/device"} />
                 ) : (
-                  <div>not auth</div>
+                  undefined
                 )}
               </div>
               </div>
