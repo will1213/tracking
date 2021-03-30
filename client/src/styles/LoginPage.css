@@ -2,15 +2,20 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: "Dosis", sans-serif;
 }
 .container {
-  height: 80vh;
+  background-color: #59af6e;
+  background: linear-gradient(#6cb661, #258092);
+  height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
+  color: white;
 }
-.internal-container {
+.login {
   margin: auto;
   display: flex;
   justify-content: space-around;
@@ -19,12 +24,26 @@
   height: 60vh;
 }
 .logo {
-  width: 30vw;
+  min-width: 15vw;
+  border-radius: 50px;
 }
 .login-button {
-  width: 300px;
+  height: 5vh;
+  width: 15vw;
 }
-
+.infoContainer {
+  background-color: #2b9f9c;
+  border-radius: 50px;
+  text-align: left;
+  padding: 20px;
+}
+.googlelogo {
+  background-color: white;
+  height: 5vh;
+}
+.login-logo-button {
+  flex-direction: row;
+}
 @media screen and (max-width: 600px) {
   .container {
     height: 100vh;

@@ -1,9 +1,4 @@
-* {
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.internal-container {
+.nav-container {
   float: left;
   background-color: #28703c;
   margin: auto;
@@ -11,9 +6,19 @@
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-width: 15vw;
+  color: white;
+  font-size: 1.5rem;
 }
 
-.logo {
-  width: 15vw;
+.navlogo {
+  max-width: 15vw;
+}
+.navbutton {
+  max-width: 15vw;
+  align-self: stretch;
 }

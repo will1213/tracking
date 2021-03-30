@@ -7,6 +7,8 @@ import DevicePage from "./pages/DevicePage";
 import StaffPage from "./pages/StaffPage";
 import AddDevicePage from "./pages/AddDevicePage";
 import CalendarPage from "./pages/CalendarPage";
+import CheckOutPage from "./pages/CheckOutPage";
+import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./Utils/ProtectedRoute";
 
 //import Signin from "./components/Signin";
@@ -17,7 +19,9 @@ export default class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={LoginPage} />
-            <ProtectedRoute exact path="/device" component={DevicePage} />
+            <ProtectedRoute exact path="/home" component={HomePage} />
+            <ProtectedRoute exact path="/checkout" component={CheckOutPage} />
+            <ProtectedRoute exact path="/device"  component={DevicePage} />
             <ProtectedRoute exact path="/staff" component={StaffPage} />
             <ProtectedRoute exact path="/add" component={AddDevicePage} />
             <ProtectedRoute exact path="/calendar" component={CalendarPage} />

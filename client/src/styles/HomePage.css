@@ -1,0 +1,30 @@
+.info {
+  padding-left: 15vw;
+}
+.content {
+  background: linear-gradient(#6cb661, #258092);
+}
+.profile-card {
+  display: block;
+  margin-top: 20vh;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  text-align: left;
+  background: black;
+}
+
+.first-col {
+  width: 10vw;
+}
+.second-col {
+  max-width: 10vw;
+}
+.third-col {
+  width: 10vw;
+}
+#info-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

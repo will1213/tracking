@@ -1,0 +1,19 @@
+.checkout {
+  display: block;
+  margin-top: 10vh;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+.checkoutcard {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.card {
+  margin: 1vw;
+}

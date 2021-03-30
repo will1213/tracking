@@ -1,4 +1,19 @@
 .Calendar {
-  padding-left: 100px;
-  height: 50vh;
+  padding: 50px;
+  margin: auto;
+  width: 50%;
+}
+.react-calendar {
+  width: 50vw;
+}
+.calendarButtons {
+  margin: auto;
+  width: 30vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.middleButton {
+  padding-left: 50px;
+  padding-right: 50px;
 }

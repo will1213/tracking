@@ -3,7 +3,8 @@ import { Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import "../styles/LoginPage.css";
 import logo from "../images/logo.png";
-import firebase, { db, auth} from "../components/db";
+import googlelogo from "../images/google.png";
+import firebase from "../components/db";
 import { AuthConsumer } from "../context/AuthContext"
 import 'react-calendar/dist/Calendar.css';
 
@@ -12,25 +13,27 @@ function Loginfun (){
   return(
     <AuthConsumer>
             {({ authenticated, user, login, logout }) => (
-
                 <div className="container">
-                <div className="internal-container">
-                <img src={logo} className="logo"></img>
-                <Button
-                              className="login-button"
-                              onClick = {login}
-                            >
-                            Sign in With Google
-                            </Button>
-                {authenticated ? (
-                  <Redirect to={"/device"} />
+                  <div className="login">
+                    <img src={logo} alt= "" className="logo"></img>
+                    <div className= "infoContainer">
+                      Engineering for Kids Online Tracking System
+                    </div>
+                    <div className = "login-logo-button">
+                      <img src={googlelogo} alt= "" className="googlelogo"></img>
+                      <Button className="login-button" onClick = {login}>     
+                        Sign in With Google
+                      </Button>
+                    </div>
+                { authenticated ? (
+                  <Redirect to={"/home"}/>
                 ) : (
                   undefined
                 )}
-              </div>
-              </div>
+                  </div>
+                </div>
             )}
-  </AuthConsumer>
+    </AuthConsumer>
   )
 }
 
@@ -44,7 +47,6 @@ class LoginPage extends Component {
 
     }
     this.signInUser = this.signInUser.bind(this);
-    this.createContext = this.createContext.bind(this);
   }
   
  signInUser () {
@@ -67,9 +69,6 @@ class LoginPage extends Component {
     console.log(error);
 
   });
- }
- createContext (){
-
  }
 
   render() {

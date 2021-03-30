@@ -1,17 +1,33 @@
 .staff {
-  padding-left: 5vw;
   width: 30vw;
+  display: block;
+
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
 }
 .button-group {
   margin: 2vw;
+  width: 8vw;
 }
+
 .staffCard {
-  background: #94de7a !important;
+  background: #3e444a !important;
   margin: 10px;
-  width: 30vw;
+  width: 60vw;
   align-items: stretch;
   justify-content: center;
 }
 .staffCardHeader {
-  background: #28703c !important;
+  background: #343a40 !important;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+.content {
+  background-color: #94de7a;
+  min-height: 100vh;
 }

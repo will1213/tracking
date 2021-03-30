@@ -25,13 +25,13 @@ function MyOverlay(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {props.title}{props.isclass ? "'s Classes": "'s Devices"}
+          {props.title}
         </Modal.Title>
       </Modal.Header>
-      {props.isclass ? props.classes.map( element => <Modal.Body>{element}</Modal.Body>) : props.devices.map(element => <Modal.Body>{element}</Modal.Body>)}
       <Modal.Body>
-        {props.body}
+      {props.islist? props.content.map( element => <Modal.Body>{element}</Modal.Body>) : props.content} 
       </Modal.Body>
+
       <Modal.Footer>
         <Button onClick={() => {props.onHide()}}>Close</Button>
       </Modal.Footer>
@@ -44,19 +44,19 @@ Overlay
 */
 function Overlay(props) {
   const [modalShow, setModalShow] = React.useState(false);
+  
   return (
     <React.Fragment>
       <Button  className = "button-group" variant="primary" onClick={ () =>{
         setModalShow(true);
-        }} >{props.title}{props.isClass ? "'s Classes": "'s Devices"}
+        }} >{props.title}
       </Button>
       <MyOverlay
         show = {modalShow}
         onHide = {() => {setModalShow(false); }}
         title = {props.title}
-        isclass = {props.isclass}
-        classes = {props.classes}
-        devices = {props.devices}
+        content = {props.content}
+        islist = {props.isList}
       />
     </React.Fragment>
   );
@@ -70,6 +70,8 @@ class StaffPage extends React.Component {
             staffNames : [],
             devices: [],
             classes : [],
+            phones : [],
+            emails: [],
           }
           this.gettingStaffInfo = this.gettingStaffInfo.bind(this)
     }
@@ -81,6 +83,8 @@ class StaffPage extends React.Component {
       var dbclasses = [];
       var dbdeviceIDs = [];
       var dbstaffs = [];
+      var dbemails = [];
+      var dbphones = [];
  
       db.collection("Staff").orderBy("Name").get().then( snapshot => {
 
@@ -106,9 +110,11 @@ class StaffPage extends React.Component {
         })
 
         dbdocuments.push(doc.id);
-        dbstaffs.push(doc.data().Name)
-        dbdeviceIDs.push(tempDeviceIDs)
-        dbclasses.push(tempClasses)
+        dbstaffs.push(doc.data().Name);
+        dbdeviceIDs.push(tempDeviceIDs);
+        dbclasses.push(tempClasses);
+        dbemails.push(doc.data().Email);
+        dbphones.push(doc.data().Phone)
     })
     
 }).then( ()=>{
@@ -117,9 +123,9 @@ class StaffPage extends React.Component {
     staffNames : dbstaffs,
     devices: dbdeviceIDs,
     classes : dbclasses,
+    emails : dbemails,
+    phones : dbphones,
   })
-  console.log("done getting data for staff")
-  console.log(this.state.classes);
 }
 ).catch( (error)=>{
   console.log(error);
@@ -140,16 +146,18 @@ class StaffPage extends React.Component {
 
 
               <div className = "staff">
-                <div >
+                <div>
                   <ButtonGroup vertical = {true}>
                   {this.state.documents.map((element)=>{
                     var index = this.state.documents.indexOf(element);
                     return (
-                      <Card className = "staffCard">
+                      <Card text = "light" className = "staffCard">
                         <Card.Header className = "staffCardHeader">{this.state.staffNames[index]}</Card.Header>
                           <Card.Body>
-                            <Overlay isclass = {true ? 1 : undefined} classes = {this.state.classes[index]} title = {this.state.staffNames[index]}/>
-                            <Overlay isclass = {false ? 1 : undefined} devices = {this.state.devices[index]} title = {this.state.staffNames[index]}/>
+                            <Overlay islist = { true ? 1 : undefined} content = {this.state.classes[index]} title = {this.state.staffNames[index] + "'s Classes"}/>
+                            <Overlay islist = { true ? 1 : undefined} content = {this.state.devices[index]} title = {this.state.staffNames[index] + "'s Devices"}/>
+                            <Overlay islist = { false ? 1 : undefined} content = {this.state.emails[index]} title = {this.state.staffNames[index] + "'s Email"}/>
+                            <Overlay islist = { false ? 1 : undefined} content = {this.state.phones[index]} title = {this.state.staffNames[index] + "'s Phone"}/>
                           </Card.Body>
                       </Card>
                     )
