@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import React, { Component } from "react";
+import React, { useState, Component } from "react";
 import { Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import { Card } from "react-bootstrap"
@@ -8,12 +8,102 @@ import Table from 'react-bootstrap/Table'
 import ListGroup from 'react-bootstrap/ListGroup'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Modal from 'react-bootstrap/Modal'
-import { db} from "../components/db";
+import firebase,{ db} from "../components/db";
+import Form from 'react-bootstrap/Form'
+import { AuthConsumer } from "../context/AuthContext"
 
 /*
  JSX For overlay in the middle of screen
 */
+function AddClasses(props) {
+  const [show, setShow] = useState(false);
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [classes, setClasses] = useState("");
+
+  const onSubmit = (e) =>{
+    e.preventDefault();
+    db.collection("Staff").doc(props.docID).update({
+      Classes: firebase.firestore.FieldValue.arrayUnion(classes),
+    }
+    )
+  }
+  return (
+    <>
+      <Button className = "button-group" variant="primary" onClick={handleShow}>
+       {"Add Class"}
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+      <Form  onSubmit = {onSubmit}>
+        <Modal.Header closeButton>
+          <Modal.Title>{"Add Class"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group >
+            <Form.Control onChange = { (event) => { setClasses(event.target.value) } } value = {classes} type="text" placeholder="Class Name" />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" type="submit" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+        </Form>
+      </Modal>
+    </>
+  );
+}
+
+function RemoveClasses(props) {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [classes, setClasses] = useState("");
+
+  const onSubmit = (e) =>{
+    e.preventDefault();
+    db.collection("Staff").doc(props.docID).update({
+      Classes: firebase.firestore.FieldValue.arrayRemove(classes),
+    }
+    )
+  }
+  return (
+    <>
+      <Button className = "button-group" variant="primary" onClick={handleShow}>
+       {"Remove Class"}
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+      <Form  onSubmit = {onSubmit}>
+        <Modal.Header closeButton>
+          <Modal.Title>{"Remove Class"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group >
+            <Form.Control onChange = { (event) => { setClasses(event.target.value) } } value = {classes} type="text" placeholder="Class Name" />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" type="submit" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+        </Form>
+      </Modal>
+    </>
+  );
+}
 function MyOverlay(props) {
 
   return (
@@ -29,7 +119,7 @@ function MyOverlay(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-      {props.islist? props.content.map( element => <Modal.Body>{element}</Modal.Body>) : props.content} 
+        {props.content.map( element => <Modal.Body key = {element.index + props.title}>{element}</Modal.Body>)} 
       </Modal.Body>
 
       <Modal.Footer>
@@ -56,7 +146,6 @@ function Overlay(props) {
         onHide = {() => {setModalShow(false); }}
         title = {props.title}
         content = {props.content}
-        islist = {props.isList}
       />
     </React.Fragment>
   );
@@ -89,6 +178,8 @@ class StaffPage extends React.Component {
       db.collection("Staff").orderBy("Name").get().then( snapshot => {
 
       snapshot.forEach(doc => { 
+
+        /*
         var tempClasses = [];
         var tempDeviceIDs = [];
         //Getting nested Classes
@@ -100,6 +191,7 @@ class StaffPage extends React.Component {
           console.log(error);
         })
 
+
         //Getting Nested Devices
         db.collection("Staff").doc(doc.id).collection("Device").get().then( snapshot2 => {
           snapshot2.forEach (doc2 => {
@@ -108,11 +200,27 @@ class StaffPage extends React.Component {
         }).catch( (error)=>{
           console.log(error);
         })
+        */
+       var tempDeviceNames = [];
+       if(doc.data().Devices.length > 0 ){
+        doc.data().Devices.forEach((device)=>{
+          db.collection("Device").doc(device).get().then( doc =>{
+            if(doc.exists){
+              tempDeviceNames.push(doc.data().DeviceName)
+            }
+          }
+          ).catch( error =>{console.log(error)} )
+        })
+       }
+
 
         dbdocuments.push(doc.id);
         dbstaffs.push(doc.data().Name);
-        dbdeviceIDs.push(tempDeviceIDs);
-        dbclasses.push(tempClasses);
+        //dbdeviceIDs.push(tempDeviceIDs);
+        dbclasses.push(doc.data().Classes);
+        //dbclasses.push(tempClasses);
+        //dbdeviceIDs.push(doc.data().Devices);
+        dbdeviceIDs.push(tempDeviceNames);
         dbemails.push(doc.data().Email);
         dbphones.push(doc.data().Phone)
     })
@@ -136,7 +244,10 @@ class StaffPage extends React.Component {
     render(){
       
         return(
-        <React.Fragment>           
+          <AuthConsumer>{
+            ({authenticated, user}) =>{
+              return( 
+              <React.Fragment>           
           <div className='content'>
             <NavBar/>
               <div className = 'info'>      
@@ -151,15 +262,30 @@ class StaffPage extends React.Component {
                   {this.state.documents.map((element)=>{
                     var index = this.state.documents.indexOf(element);
                     return (
-                      <Card text = "light" className = "staffCard">
-                        <Card.Header className = "staffCardHeader">{this.state.staffNames[index]}</Card.Header>
-                          <Card.Body>
-                            <Overlay islist = { true ? 1 : undefined} content = {this.state.classes[index]} title = {this.state.staffNames[index] + "'s Classes"}/>
-                            <Overlay islist = { true ? 1 : undefined} content = {this.state.devices[index]} title = {this.state.staffNames[index] + "'s Devices"}/>
-                            <Overlay islist = { false ? 1 : undefined} content = {this.state.emails[index]} title = {this.state.staffNames[index] + "'s Email"}/>
-                            <Overlay islist = { false ? 1 : undefined} content = {this.state.phones[index]} title = {this.state.staffNames[index] + "'s Phone"}/>
-                          </Card.Body>
-                      </Card>
+                        <Card key = {index} text = "light" className = "staffCard">
+                          <Card.Header className = "staffCardHeader">{this.state.staffNames[index]}</Card.Header>
+                            <div className = "staffCard-outer">
+                              <Card.Body>
+                                {user.role ?                                 
+                                  <div className = "staff-email-phone">
+                                    <AddClasses docID = {this.state.documents[index]}/>
+                                    <RemoveClasses docID = {this.state.documents[index]}/>
+                                  </div>
+                                  :
+                                  <div></div>
+                                }
+
+                                <div className = "staff-email-phone">
+                                  <Overlay islist = { true ? 1 : undefined} content = {this.state.classes[index]} title = "Classes"/>
+                                  <Overlay islist = { true ? 1 : undefined} content = {this.state.devices[index]} title = "Devices"/>
+                                </div>
+                                <div className = "staff-email-phone">
+                                  <div>{"Email: "}{this.state.emails[index]}</div>
+                                  <div>{"Phone: "}{this.state.phones[index]}</div>
+                                </div>
+                              </Card.Body>
+                            </div>
+                        </Card>
                     )
                   }
                   
@@ -172,6 +298,12 @@ class StaffPage extends React.Component {
               </div>
           </div>
         </React.Fragment>
+              )
+            }
+            }
+
+          </AuthConsumer>
+        
         )
     }
 }

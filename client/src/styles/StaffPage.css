@@ -1,33 +1,23 @@
-.staff {
-  width: 30vw;
-  display: block;
-
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-}
 .button-group {
   margin: 2vw;
-  width: 8vw;
+  width: 10vw;
 }
 
 .staffCard {
   background: #3e444a !important;
   margin: 10px;
-  width: 60vw;
+  width: 50vw;
   align-items: stretch;
-  justify-content: center;
 }
 .staffCardHeader {
   background: #343a40 !important;
-}
-.info {
-  display: flex;
-  flex-direction: column;
   align-items: stretch;
-  justify-content: center;
 }
-.content {
-  background-color: #94de7a;
-  min-height: 100vh;
+
+.staff-email-phone {
+  text-align: left;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
 }

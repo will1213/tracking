@@ -24,10 +24,8 @@ class AuthProvider extends React.Component {
             Email:profile.email,
             role: false,
             Phone: '',
-            }).then(()=>{    
-              db.collection("Staff").doc(profile.id).collection("Class").add({
-              ClassName: null,
-            })
+            Devices: [],
+            Classes: [],
             }).then(()=>{
               db.collection("Staff").doc(profile.id).get()
               .then((doc)=>{       
@@ -39,10 +37,11 @@ class AuthProvider extends React.Component {
                 localStorage.setItem("id", profile.id)
                 localStorage.setItem("logged", true)
               }})
-            }).then(
+            }).then( ()=>{              
               this.setState({
-                authenticated: true,
-              })
+              authenticated: true,
+            })}
+
             ).catch(function(error) {
               console.error("Error adding document: ", error);
             });
