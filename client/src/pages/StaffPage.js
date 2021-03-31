@@ -12,9 +12,51 @@ import firebase,{ db} from "../components/db";
 import Form from 'react-bootstrap/Form'
 import { AuthConsumer } from "../context/AuthContext"
 
-/*
- JSX For overlay in the middle of screen
-*/
+function PromoteStaff(props) {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [classes, setClasses] = useState("");
+
+  const onSubmit = (e) =>{
+    e.preventDefault();
+    db.collection("Staff").doc(props.docID).update({
+      Classes: firebase.firestore.FieldValue.arrayUnion(classes),
+    }
+    )
+  }
+  return (
+    <>
+      <Button className = "button-group" variant="primary" onClick={handleShow}>
+       {"Add Class"}
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+      <Form  onSubmit = {onSubmit}>
+        <Modal.Header closeButton>
+          <Modal.Title>{"Add Class"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group >
+            <Form.Control onChange = { (event) => { setClasses(event.target.value) } } value = {classes} type="text" placeholder="Class Name" />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" type="submit" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+        </Form>
+      </Modal>
+    </>
+  );
+}
+
 function AddClasses(props) {
   const [show, setShow] = useState(false);
 
@@ -162,11 +204,24 @@ class StaffPage extends React.Component {
             phones : [],
             emails: [],
           }
-          this.gettingStaffInfo = this.gettingStaffInfo.bind(this)
+          this.gettingStaffInfo = this.gettingStaffInfo.bind(this);
+          this.promoteStaff = this.promoteStaff.bind(this);
+          this.demoteStaff = this.demoteStaff.bind(this);
     }
     componentDidMount(){
       this.gettingStaffInfo();
     }
+    promoteStaff(docID){
+      db.collection("Staff").doc(docID).update({
+        role: true,
+      })
+    }
+    demoteStaff(docID){
+      db.collection("Staff").doc(docID).update({
+        role: false,
+      })
+    }
+
     gettingStaffInfo(){
       var dbdocuments = [];
       var dbclasses = [];
@@ -263,7 +318,12 @@ class StaffPage extends React.Component {
                     var index = this.state.documents.indexOf(element);
                     return (
                         <Card key = {index} text = "light" className = "staffCard">
-                          <Card.Header className = "staffCardHeader">{this.state.staffNames[index]}</Card.Header>
+                          <Card.Header className = "staffCardHeader">{this.state.staffNames[index]} 
+                          <div className = "staff-email-phone">
+                            <Button onClick = { ()=>{this.promoteStaff(this.state.documents[index])}} >Promote</Button>
+                            <Button onClick = { ()=>{this.demoteStaff(this.state.documents[index])}} >Demote</Button>
+                            </div>
+                          </Card.Header> 
                             <div className = "staffCard-outer">
                               <Card.Body>
                                 {user.role ?                                 
